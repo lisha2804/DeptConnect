@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DeptConnect</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  
+
+  <style>
+    
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+    background-color: #f4f1ec;
+    margin: 0;
+    padding: 0;
+    }
+
+    .card {
+      background-color: #e9edc9; 
+      border: 1px solid #a98467; 
+    }    
+
+    .card-title {
+      color: #4a7263;
+    }
+
+    .card-text {
+      color: #3a4b43;
+    }
+
+
+    .hero-section {
+      background: linear-gradient( #4a7263, #3a4b43);
+      color: white;
+      padding: 100px 0;
+      text-align: center;
+    }
+
+    .navbar-brand {
+      font-weight: bold; 
+      color: antiquewhite;
+      font-size: 30px;
+
+    }
+
+    .nav-link {
+      color: white !important;
+    }
+
+    .nav-link:hover {
+      text-decoration: underline;
+    }
+
+
+    .accordion-button {
+      background-color: #e7dbc8;  
+      color: #3a4b43;            
+      font-weight: 500;
+    }
+  
+    .accordion-button:not(.collapsed) {
+  background-color: #d6ccc2;
+  color: #3a4b43;
+}
+
+
+    .accordion-body {
+     background-color: #f9f7f1; 
+     color: #3a4b43;
+    }
+
+
+
+    .gallery-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+}
+
+.gallery-img {
+  height: 250px;
+  object-fit: cover;
+  width: 100%;
+  display: block;
+}
+
+
+.gallery-desc {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(58, 75, 67, 0.8); 
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  font-size: 14px;
+}
+
+.gallery-card:hover .gallery-desc {
+  opacity: 1;
+}
+
+
+.footer-inner {
+  max-width: 1140px; /* Matches Bootstrap container */
+}
+
+.footer-heading {
+  color: #90d3c4;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.footer-link {
+  color: antiquewhite;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.footer-link:hover {
+  color: #dfa96b;
+  text-decoration: underline;
+}
+
+
+#chatbot-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  font-family: Arial, sans-serif;
+}
+
+#chatbot-toggle {
+  background-color: #6F5846;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 12px 18px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+#chat-window {
+  width: 300px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+#chat-header {
+  background-color: #4a7263;
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  text-align: center;
+}
+
+#chat-body {
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 10px;
+  background-color: #f8f9fa;
+}
+
+.chat-message {
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.chat-message.bot {
+  color: #4a7263;
+  font-weight: 600;
+}
+
+.chat-message.user {
+  text-align: right;
+  color: #333;
+}
+
+#chat-input-area {
+  display: flex;
+  border-top: 1px solid #ccc;
+}
+
+#chat-input {
+  flex-grow: 1;
+  padding: 10px;
+  border: none;
+  outline: none;
+}
+
+#chat-send {
+  background-color: #4a7263;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+/* Chatbot FAQ Buttons */
+.faq-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.faq-buttons button {
+  background-color: #90d3c4;
+  color: #043d30;
+  border: none;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  text-align: left;
+  transition: background-color 0.3s ease;
+}
+
+.faq-buttons button:hover {
+  background-color: #7dc0b2;
+  cursor: pointer;
+}
+
+
+  </style>
+</head>
+<body>
+
+  <!-- Chatbot -->
+<div id="chatbot-container">
+  <button id="chatbot-toggle">💬 Need Help?</button>
+  <div id="chat-window" class="d-none">
+    <div id="chat-header">CompSci Assistant</div>
+    <div id="chat-body">
+      <div class="chat-message bot">Hi! I'm CompSci Assistant. Ask me anything!</div>
+    </div>
+    <div id="chat-input-area">
+      <input type="text" id="chat-input" placeholder="Type your question..." />
+      <button id="chat-send">Send</button>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Navbar -->
+   <nav class="navbar navbar-expand-lg sticky-top" style="background-color: #4a7263;">
+    <div class="container">
+      <a class="navbar-brand" href="#">DeptConnect</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="#courses">Courses</a></li>
+          <li class="nav-item"><a class="nav-link" href="#faculty">Faculty</a></li>
+          <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- Home -->
+  <section id="home" class="hero-section">
+    <div class="container">
+      <h1 class="display-4 fw-bold">Welcome to the Department Of <br> Computer Science</h1>
+      <p class="lead">Empowering Students for a Digital Tomorrow</p>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="py-5">
+    <div class="container">
+      <h2 class="text-center mb-4">About the Department</h2>
+      <div class="row align-items-center">
+
+        <!-- Intro -->
+        <div class="col-md-6">
+          <div class="card border-primary shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">Who We Are</h5>
+              <p class="card-text">
+                We are a passionate team of educators and learners committed to excellence in computer science education. Our curriculum blends theory, projects, and practical exposure.
+              </p>
+              <p class="card-text">
+                <strong>Mission:</strong><br>
+                To develop technically sound, ethically strong, and industry-ready graduates.
+              </p>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Facts -->
+        <div class="col-md-6 mt-4 mt-md-0">
+
+  <ul class="list-group">
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <i class="fas fa-calendar-alt text-primary me-3 fs-5"></i>
+        <span class="fw-medium"></span>Established</span>
+      </div>
+      <span class="badge text-bg-primary rounded-pill px-3 py-2">2008</span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <i class="fas fa-user-tie text-primary me-3 fs-5"></i>
+        <span class="fw-medium">HOD</span>
+      </div>
+      <span class="badge text-bg-primary rounded-pill px-3 py-2">Prof. Anita Sharma</span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <i class="fas fa-certificate text-primary me-3 fs-5"></i>
+        <span class="fw-medium">Accreditation</span>
+      </div>
+      <span class="badge text-bg-success rounded-pill px-3 py-2">NAAC A+</span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <i class="fas fa-university text-primary me-3 fs-5"></i>
+        <span class="fw-medium">Affiliation</span>
+      </div>
+      <span class="badge text-bg-secondary rounded-pill px-3 py-2">Mumbai University</span>
+    </li>
+  </ul>
+</div>
+
+
+      <!-- Accordion -->
+<div class="accordion mt-5" id="deptFaq">
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+        🌟 What makes this department unique?
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#deptFaq">
+      <div class="accordion-body">
+        Our department stands out for its experienced faculty, industry-relevant curriculum, modern lab facilities, and consistent student placement records. We focus on both academic excellence and hands-on training.
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingTwo">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+        🏆 Achievements of the department?
+      </button>
+    </h2>
+    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#deptFaq">
+      <div class="accordion-body">
+        The department has won multiple intercollegiate coding competitions, published over 50+ research papers, and has active MoUs with leading tech companies for training and internships.
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingThree">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+        🧑‍💻 What labs/facilities are available?
+      </button>
+    </h2>
+    <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#deptFaq">
+      <div class="accordion-body">
+        We offer a modern programming lab, IoT lab, cloud computing infrastructure, fully air-conditioned classrooms, and campus-wide 24x7 Wi-Fi.
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingFour">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
+        🎓 Career opportunities after graduation?
+      </button>
+    </h2>
+    <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#deptFaq">
+      <div class="accordion-body">
+        Graduates can pursue careers in software development, data science, AI/ML, cybersecurity, web development, and research. Many students also choose to pursue higher studies or certifications to specialize further.
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingFive">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive">
+        🌐 Industry partnerships?
+      </button>
+    </h2>
+    <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#deptFaq">
+      <div class="accordion-body">
+        Our department collaborates with companies like Infosys, TCS, AWS Educate, Red Hat Academy, and Wipro through workshops, internships, and certification programs.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+  <!-- Courses Offered  -->
+  <section id="courses" class="py-5">
+    <div class="container">
+      <h2 class="text-center mb-4">Courses Offered</h2>
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">B.Sc. Computer Science</h5>
+              <p class="card-text">Duration: 3 Years<br>Eligibility: 10+2 with Mathematics</p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">M.Sc. Computer Science</h5>
+              <p class="card-text">Duration: 2 Years<br>Eligibility: B.Sc. in CS/IT</p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">Diploma in Data Analytics</h5>
+              <p class="card-text">Duration: 1 Year<br>Eligibility: Any Graduation</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Faculty -->
+<section id="faculty" class="py-5 ">
+  <div class="container">
+    <h2 class="text-center mb-4">Meet Our Faculty</h2>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+
+      <!-- Faculty Card 1 -->
+      <div class="col">
+        <div class="card h-100 shadow-sm text-center">
+          <img src="prof1.jpeg" class="card-img-top rounded-circle mx-auto mt-4" style="width: 100px; height: 100px; object-fit: cover;" alt="Dr. Neha Verma">
+          <div class="card-body">
+            <h5 class="card-title">Dr. Neha Verma</h5>
+            <p class="card-text text-muted mb-1">Associate Professor</p>
+            <p class="card-text"><strong>AI & Machine Learning</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Faculty Card 2 -->
+      <div class="col">
+        <div class="card h-100 shadow-sm text-center">
+          <img src="prof4.jpeg" class="card-img-top rounded-circle mx-auto mt-4" style="width: 100px; height: 100px; object-fit: cover;" alt="Mr. Raj Sharma">
+          <div class="card-body">
+            <h5 class="card-title">Mr. Raj Sharma</h5>
+            <p class="card-text text-muted mb-1">Lecturer</p>
+            <p class="card-text"><strong>Database Management</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Faculty Card 3 -->
+      <div class="col">
+        <div class="card h-100 shadow-sm text-center">
+          <img src="prof3.jpeg" class="card-img-top rounded-circle mx-auto mt-4" style="width: 100px; height: 100px; object-fit: cover;" alt="Ms. Aarti Joshi">
+          <div class="card-body">
+            <h5 class="card-title">Ms. Aarti Joshi</h5>
+            <p class="card-text text-muted mb-1">Professor</p>
+            <p class="card-text"><strong>Data Science</strong></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- Placement -->
+<section id="placements" class="py-5">
+  <div class="container">
+    <h2 class="text-center mb-4">Our Placement Record</h2>
+
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+
+
+        <!-- Placement Rate -->
+        <p class="mb-1 fw-semibold">Placement Rate (2023)</p>
+        <div class="progress mb-4">
+          <div class="progress-bar bg-success" role="progressbar" style="width: 90%;">90%</div>
+
+        </div>
+
+        <!-- Student Satisfaction -->
+        <p class="mb-1 fw-semibold">Student Satisfaction</p>
+        <div class="progress mb-4">
+          <div class="progress-bar bg-info" role="progressbar" style="width: 95%;">95%</div>
+        </div>
+
+        <!-- Internship -->
+        <p class="mb-1 fw-semibold">Internships Converted to Jobs</p>
+        <div class="progress mb-4">
+          <div class="progress-bar bg-warning text-dark" role="progressbar" style="width: 75%;">75%</div>
+        </div>
+
+        <!-- Alumni -->
+        <p class="mb-1 fw-semibold">Alumni in Top MNCs</p>
+        <div class="progress mb-4">
+          <div class="progress-bar bg-primary" role="progressbar" style="width: 60%;">60%</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Gallery -->
+<section id="gallery" class="py-5">
+  <div class="container">
+    <h2 class="text-center mb-4">Campus & Department Life</h2>
+    
+    <div class="row g-4">
+
+     
+      <div class="col-6 col-md-4">
+        <div class="card shadow-sm gallery-card">
+          <img src="lab.jpeg" class="gallery-img" alt="Lab Session">
+          <div class="gallery-desc">Computer Lab</div>
+        </div>
+      </div>
+
+     
+      <div class="col-6 col-md-4">
+        <div class="card shadow-sm gallery-card">
+          <img src="fest.jpeg" class="gallery-img" alt="Tech Fest">
+          <div class="gallery-desc">Annual Tech Fest Highlights</div>
+        </div>
+      </div>
+
+      
+      <div class="col-6 col-md-4">
+        <div class="card shadow-sm gallery-card">
+          <img src="seminar.jpeg" class="gallery-img" alt="Seminar Hall">
+          <div class="gallery-desc">Seminar on Cybersecurity</div>
+        </div>
+      </div>
+
+     
+      <div class="col-6 col-md-4">
+        <div class="card shadow-sm gallery-card">
+          <img src="pres.jpeg" class="gallery-img" alt="Group Project">
+          <div class="gallery-desc">Final Year Project Presentation</div>
+        </div>
+      </div>
+
+      
+      <div class="col-6 col-md-4">
+        <div class="card shadow-sm gallery-card">
+          <img src="libr.jpeg" class="gallery-img" alt="Library">
+          <div class="gallery-desc">24x7 Department Library</div>
+        </div>
+      </div>
+
+     
+      <div class="col-6 col-md-4">
+        <div class="card shadow-sm gallery-card">
+          <img src="classroom.jpeg" class="gallery-img" alt="Classroom">
+          <div class="gallery-desc">Classroom</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Testimonials -->
+
+<section class="py-5 ">
+  <div class="container">
+    <h2 class="text-center mb-4">What Our Students Say</h2>
+
+    <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+      
+      <!-- Carousel -->
+      <div class="carousel-inner">
+
+        <!-- Slide 1 -->
+        <div class="carousel-item active">
+          <div class="row text-center">
+            <div class="col-md-4">
+              <div class="card shadow-sm p-3">
+                <p>"Incredible faculty and a supportive environment!"</p>
+                <h6 class="fw-bold">Riya Mehta</h6>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card shadow-sm p-3">
+                <p>"Real-world projects helped boost my confidence."</p>
+                <h6 class="fw-bold">Aditya Singh</h6>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card shadow-sm p-3">
+                <p>"The tech fest was a turning point in my journey!"</p>
+                <h6 class="fw-bold">Sneha Patil</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="carousel-item">
+          <div class="row text-center">
+            <div class="col-md-4">
+              <div class="card shadow-sm p-3">
+                <p>"Internship opportunities here are top-notch!"</p>
+                <h6 class="fw-bold">Karan Deshmukh</h6>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card shadow-sm p-3">
+                <p>"Workshops helped me crack my dream job interview."</p>
+                <h6 class="fw-bold">Priya Rane</h6>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card shadow-sm p-3">
+                <p>"A perfect mix of fun and academics!"</p>
+                <h6 class="fw-bold">Arjun Nair</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Dots -->
+      <div class="carousel-indicators position-static mt-4 justify-content-center">
+        <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="0" class="active"
+          style="background-color: #4a7263; width: 12px; height: 12px; border-radius: 50%;"></button>
+        <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="1"
+          style="background-color: #4a7263; width: 12px; height: 12px; border-radius: 50%;"></button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+<!-- Contact -->
+<section id="contact" class="py-5" style="background-color: #e7f0ea;">
+
+  <div class="container">
+    <h2 class="text-center mb-4">Contact Us</h2>
+
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <form>
+          <div class="mb-3">
+            <label for="name" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="name" placeholder="Your Name" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="email" placeholder="name@example.com" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="department" class="form-label">Department</label>
+            <select class="form-select" id="department" required>
+              <option selected disabled>Select your department</option>
+              <option value="CS">Computer Science</option>
+              <option value="IT">Information Technology</option>
+              <option value="ENG">Engineering</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="message" class="form-label">Your Message</label>
+            <textarea class="form-control" id="message" rows="4" placeholder="Write your message here..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Footer -->
+<section id="footer" style="background-color: #4a7263; color: white; margin-top: 40px;">
+  <div class="container-fluid px-0">
+    <div class="container">
+    <div class="row py-4">
+
+
+      <!-- Col 1 -->
+      <div class="col-md-4 mb-4 mb-md-0">
+        <h5 style="color: #90d3c4;">Dept. of Computer Science</h5>
+        <p class="mb-1">Eastwood University</p>
+        <p class="mb-0">Empowering tech leaders since 1998.</p>
+      </div>
+
+    
+      <!-- Col 2 -->
+
+      <div class="col-md-4 mb-4 mb-md-0">
+        <h5 style="color: #90d3c4;">Quick Links</h5>
+        <ul class="list-unstyled">
+          <li><a href="#about" class="text-white text-decoration-none">About</a></li>
+          <li><a href="#courses" class="text-white text-decoration-none">Courses</a></li>
+          <li><a href="#faculty" class="text-white text-decoration-none">Faculty</a></li>
+          <li><a href="#contact" class="text-white text-decoration-none">Contact</a></li>
+        </ul>
+      </div>
+
+     <!-- Col 3 -->
+
+      <div class="col-md-4">
+        <h5 style="color: #90d3c4;">Contact Us</h5>
+        <p class="mb-1">Email: dept.cs@eastwood.edu</p>
+        <p class="mb-0">Phone: +91 0123456789</p>
+      </div>
+    </div>
+
+    <hr class="border-light my-2" />
+    <p class="text-center mb-0 pb-3">&copy; 2025 Dept. of CS, Eastwood University. All rights reserved.</p>
+  </div>
+</section>
+
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="carousel.js"></script>
+  <script src="chatbott.js"></script>
+
+</body>
+</html>
