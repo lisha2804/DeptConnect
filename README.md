@@ -22,6 +22,6 @@ Frontend:HTML5, CSS3, Bootstrap 5, JavaScript
 
 Live Link
 
-[Live Demo]()
+[Live Demo](https://lisha2804.github.io/DeptConnect/)
 
 ---
