@@ -1,10 +1,10 @@
-DeptConnect – College Department Website
+## DeptConnect – College Department Website
 
 DeptConnect is a modern, responsive college department website.
 
 ---
 
-Features
+## Features
 
 - Course structure displayed using accordion  
 - Floating chatbot for answering FAQs  
@@ -14,8 +14,14 @@ Features
 
 ---
 
-Tech Used:
+## Tech Used:
 
 Frontend:HTML5, CSS3, Bootstrap 5, JavaScript
+
+---
+
+Live Link
+
+[Live Demo]()
 
 ---
